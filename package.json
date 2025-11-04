@@ -1,7 +1,16 @@
 {
-  "name": "travel_app",
+  "name": "hilink",
   "version": "0.1.0",
   "private": true,
+  "author": "Lakhya <lakhya911@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lakhyajit-96/HiLink.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lakhyajit-96/HiLink/issues"
+  },
+  "homepage": "https://github.com/Lakhyajit-96/HiLink#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,17 +18,17 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "13.5.4"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "next": "^16.0.1"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10",
-    "postcss": "^8",
-    "tailwindcss": "^3"
+    "typescript": "^5.9.3",
+    "@types/node": "^22.19.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18"
   }
 }
