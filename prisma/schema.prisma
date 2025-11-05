@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductType {
+  TOUR
+  STAY
+  ACTIVITY
+  TRANSPORT
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  bookings  Booking[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Destination {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  region      String    // e.g., North East India, West India
+  state       String
+  city        String?
+  latitude    Float
+  longitude   Float
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  title         String        @unique
+  type          ProductType
+  destinationId String
+  destination   Destination  @relation(fields: [destinationId], references: [id])
+  description   String?
+  durationDays  Int?         // Tours duration
+  basePriceINR  Int          // Base price in INR
+  currency      String       @default("INR")
+  active        Boolean      @default(true)
+  thumbnailUrl  String?
+  availabilities Availability[]
+  bookings      Booking[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Availability {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  startDate  DateTime
+  capacity   Int
+  priceINR   Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  bookings   Booking[]
+  @@unique([productId, startDate], name: "productId_startDate")
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
+  availabilityId  String?
+  availability    Availability? @relation(fields: [availabilityId], references: [id])
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id])
+  status          BookingStatus @default(PENDING)
+  startDate       DateTime
+  quantity        Int           @default(1)
+  totalAmountINR  Int
+  currency        String        @default("INR")
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  payment         Payment?
+}
+
+model Payment {
+  id             String   @id @default(cuid())
+  bookingId      String   @unique
+  booking        Booking  @relation(fields: [bookingId], references: [id])
+  gateway        String   // e.g., STRIPE, RAZORPAY
+  providerTxnId  String?
+  status         String   // e.g., REQUIRES_ACTION, SUCCEEDED
+  amountINR      Int
+  currency       String   @default("INR")
+  createdAt      DateTime @default(now())
+}
