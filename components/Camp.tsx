@@ -1,5 +1,7 @@
+"use client";
 import { PEOPLE_URL } from "@/constants";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 interface CampProps {
   backgroundImage: string;
@@ -48,9 +50,34 @@ const CampSite = ({ backgroundImage, title, subtitle, peopleJoined }: CampProps)
 }
 
 const Camp = () => {
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    let stop = false
+    let raf = 0
+    const step = () => {
+      if (stop) return
+      el.scrollLeft += 0.4
+      const max = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= max - 1) el.scrollLeft = 0
+      raf = requestAnimationFrame(step)
+    }
+    const onEnter = () => { stop = true }
+    const onLeave = () => { stop = false; raf = requestAnimationFrame(step) }
+    el.addEventListener('mouseenter', onEnter)
+    el.addEventListener('mouseleave', onLeave)
+    raf = requestAnimationFrame(step)
+    return () => {
+      cancelAnimationFrame(raf)
+      el.removeEventListener('mouseenter', onEnter)
+      el.removeEventListener('mouseleave', onLeave)
+    }
+  }, [])
   return (
     <section className="2xl:max-container relative flex flex-col py-10 lg:mb-10 lg:py-20 xl:mb-20">
-      <div className="hide-scrollbar flex h-[340px] w-full items-start justify-start gap-8 overflow-x-auto lg:h-[400px] xl:h-[640px]">
+      <div ref={scrollRef} className="hide-scrollbar flex h-[340px] w-full items-start justify-start gap-8 overflow-x-auto lg:h-[400px] xl:h-[640px]">
         <CampSite 
           backgroundImage="bg-bg-img-1"
           title="Shillong Highland Camp"
