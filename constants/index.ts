@@ -52,17 +52,17 @@ export const FOOTER_LINKS = [
   {
     title: 'Learn More',
     links: [
-      'About Hilink',
-      'Press Releases',
-      'Environment',
-      'Jobs',
+      'About Hilink India',
+      'Travel Guidelines (India)',
+      'Responsible Tourism',
+      'Careers in India',
       'Privacy Policy',
       'Contact Us',
     ],
   },
   {
     title: 'Our Community',
-    links: ['Climbing xixixi', 'Hiking hilink', 'Hilink kinthill'],
+    links: ['Northeast Trekkers', 'Himalayan Adventures', 'Coastal Explorers India'],
   },
 ];
 
